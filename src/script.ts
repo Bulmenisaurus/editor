@@ -1,5 +1,36 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/File_System_API
 
+const DUMMY_WRITABLE = {
+    async close() {
+        console.log('closing...');
+        // noop
+    },
+
+    async write(data: string) {
+        console.log(`Writing data:`);
+        console.log(data);
+    },
+} as FileSystemWritableFileStream;
+
+const DUMMY_FILE = {
+    async text() {
+        console.log('reading');
+        return 'file_text';
+    },
+} as File;
+
+const DUMMY_HANDLE = {
+    async createWritable() {
+        return DUMMY_WRITABLE;
+    },
+
+    async getFile() {
+        return DUMMY_FILE;
+    },
+} as FileHandle;
+
+const DEBUG = new URL(window.location.toString()).searchParams.has('debug');
+
 type FileHandle = FileSystemHandle & {
     getFile: () => Promise<File>;
     createWritable: () => Promise<FileSystemWritableFileStream>;
@@ -8,8 +39,10 @@ type FileHandle = FileSystemHandle & {
 type FileInfo = { handle: FileHandle; writer: FileSystemWritableFileStream };
 
 const getFileInfo = async (): Promise<FileInfo> => {
-    //@ts-ignore
-    const [fileHandle] = window.showOpenFilePicker() as FileHandle[];
+    if (DEBUG) return { handle: DUMMY_HANDLE, writer: DUMMY_WRITABLE };
+
+    // @ts-ignore
+    const [fileHandle] = (await window.showOpenFilePicker()) as FileHandle[];
     const writableHandle = await fileHandle.createWritable();
 
     return { handle: fileHandle, writer: writableHandle };

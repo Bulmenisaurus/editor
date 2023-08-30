@@ -9,9 +9,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const DUMMY_WRITABLE = {
+    close() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('closing...');
+            // noop
+        });
+    },
+    write(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`Writing data:`);
+            console.log(data);
+        });
+    },
+};
+const DUMMY_FILE = {
+    text() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('reading');
+            return 'file_text';
+        });
+    },
+};
+const DUMMY_HANDLE = {
+    createWritable() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return DUMMY_WRITABLE;
+        });
+    },
+    getFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return DUMMY_FILE;
+        });
+    },
+};
+const DEBUG = new URL(window.location.toString()).searchParams.has('debug');
 const getFileInfo = () => __awaiter(void 0, void 0, void 0, function* () {
-    //@ts-ignore
-    const [fileHandle] = window.showOpenFilePicker();
+    if (DEBUG)
+        return { handle: DUMMY_HANDLE, writer: DUMMY_WRITABLE };
+    // @ts-ignore
+    const [fileHandle] = (yield window.showOpenFilePicker());
     const writableHandle = yield fileHandle.createWritable();
     return { handle: fileHandle, writer: writableHandle };
 });
