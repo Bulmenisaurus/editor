@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/filesystem": "^0.0.32",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   }
