@@ -6,14 +6,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write .",
-    "build": "tsc",
-    "build:watch": "tsc -w"
+    "build": "esbuild src/script.ts --bundle --outdir=dist",
+    "build:watch": "esbuild src/script.ts --bundle --outdir=dist --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@codemirror/autocomplete": "^6.9.0",
+    "@codemirror/commands": "^6.2.5",
+    "@codemirror/lang-javascript": "^6.2.1",
+    "@codemirror/language": "^6.9.0",
+    "@codemirror/lint": "^6.4.1",
+    "@codemirror/search": "^6.5.2",
+    "@codemirror/state": "^6.2.1",
+    "@codemirror/view": "^6.17.0",
     "@types/filesystem": "^0.0.32",
+    "esbuild": "^0.19.2",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   }
